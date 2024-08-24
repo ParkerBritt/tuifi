@@ -46,6 +46,8 @@ std::unordered_map<std::string, std::string> iconNameMap = {
 
     {"bottles", "󰡔"},
     {"activities", ""},
+
+    {"houdini launcher", "󱓞"}
 };
 
 std::unordered_map<std::string, std::string> iconKeywordMap = {
@@ -78,4 +80,8 @@ std::unordered_map<std::string, std::string> iconKeywordMap = {
     {"theme", ""},
     {"style", ""},
     {"appearance", ""},
+
+    {"houdini", ""},
+
+    {"launcher", "󱓞"},
 };
