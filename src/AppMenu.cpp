@@ -1,4 +1,5 @@
 #include "AppMenu.hpp"
+#include <cstdlib>
 
 ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input){
     ui::MenuOption menuOptions = ui::MenuOption::Vertical();
@@ -38,7 +39,8 @@ ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vec
     });
     menu |= ui::CatchEvent([&](ui::Event event) {
         if(event == ui::Event().Return){
-            std::cout << visibleApplications[selectedEntry]->getExecCommand()  << std::endl;
+            std::string execCommand = visibleApplications[selectedEntry]->getExecCommand();
+            std::system(execCommand.c_str());
             return true;
         }
         return false;

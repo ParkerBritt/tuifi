@@ -120,6 +120,5 @@ int main(){
 
 
     menu->TakeFocus();
-    std::cout << "starting main loop" << std::endl;
     screen.Loop(mainLayout);
 }
