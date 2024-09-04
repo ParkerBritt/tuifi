@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Application.hpp"
+#include "MenuData.hpp"
 
 namespace ui = ftxui;
 
@@ -20,7 +21,7 @@ public:
     bool isFocusable = false;
     ui::Component& getComponent();
     ui::Component input_;
-    void setupSearchEvent(std::vector<std::shared_ptr<launcher::Application>>& applications, std::vector<std::shared_ptr<launcher::Application>>& menuApplications, std::vector<std::string>& menuEntries);
+    void setupSearchEvent(std::vector<std::shared_ptr<launcher::Application>>& applications, launcher::MenuData& menuData);
 
 private:
     ui::InputOption inputOptions_;

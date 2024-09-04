@@ -1,10 +1,9 @@
-#include "CompSearchBar.hpp"
 #include <boost/algorithm/string/case_conv.hpp>
 #include <ftxui/component/component.hpp>
 #include "Application.hpp"
-#include "IconMap.hpp"
 #include <vector>
-#include "Application.hpp"
+#include "CompSearchBar.hpp"
+#include "MenuData.hpp"
 
 namespace ui = ftxui;
 
@@ -26,14 +25,14 @@ SearchBar::SearchBar(){
 // --------------
 // catch input event and update menu with new search
 // -------------
-void SearchBar::setupSearchEvent(std::vector<std::shared_ptr<launcher::Application>>& applications, std::vector<std::shared_ptr<launcher::Application>>& menuApplications, std::vector<std::string>& menuEntries){
+void SearchBar::setupSearchEvent(std::vector<std::shared_ptr<launcher::Application>>& applications, launcher::MenuData& menuData){
         input_ |= ui::CatchEvent([&](ui::Event event) {
         // catch typing events
         if(event.is_character() || event == ui::Event::Backspace){
 
             // clear previous menu entries
-            menuEntries.clear();
-            menuApplications.clear();
+            menuData.menuEntries.clear();
+            menuData.visibleApplications.clear();
 
             // find the new search bar text
             std::string searchValue = inputStr_;
@@ -49,8 +48,8 @@ void SearchBar::setupSearchEvent(std::vector<std::shared_ptr<launcher::Applicati
                 std::string lowerAppName = application->getLowerAppName();
                 size_t foundPos = lowerAppName.find(searchValue);
                 if(foundPos != std::string::npos){
-                    menuApplications.push_back(application);
-                    menuEntries.push_back(application->getDisplayName());
+                    menuData.visibleApplications.push_back(application);
+                    menuData.menuEntries.push_back(application->getDisplayName());
                     i++;
                 }
                 

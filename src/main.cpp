@@ -102,7 +102,7 @@ int main(){
         menuData.menuEntries.push_back(applications[i]->getDisplayName());
         menuData.visibleApplications.push_back(applications[i]);
     }
-    input->setupSearchEvent(applications, menuData.visibleApplications, menuData.menuEntries);
+    input->setupSearchEvent(applications, menuData);
 
 
     // create menu
