@@ -70,7 +70,7 @@ std::vector<bfs::path> getDesktopFiles(std::string dataDirsRaw){
 }
 
 int main(){
-    auto screen = ftxui::ScreenInteractive::TerminalOutput();
+    ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::TerminalOutput();
 
     std::shared_ptr<SearchBar> input = std::make_shared<SearchBar>();
 
@@ -103,7 +103,7 @@ int main(){
 
     // create menu
     int selectedEntry = 0;
-    ui::Component menu = launcher::makeMenu(menuEntries, visibleApplications, selectedEntry, input);
+    ui::Component menu = launcher::makeMenu(menuEntries, visibleApplications, selectedEntry, input, screen);
 
 
     ui::Component mainLayout = ui::Container::Vertical({

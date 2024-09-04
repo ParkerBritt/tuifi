@@ -10,7 +10,7 @@
 namespace ui = ftxui;
 
 namespace launcher {
-ui::Component makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input);
+ui::Component makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input, ftxui::ScreenInteractive& screen);
 }
 
 #endif

@@ -1,7 +1,9 @@
 #include "AppMenu.hpp"
 #include <cstdlib>
+#include <unistd.h>
+#include <ftxui/component/screen_interactive.hpp>
 
-ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input){
+ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input, ftxui::ScreenInteractive& screen){
     ui::MenuOption menuOptions = ui::MenuOption::Vertical();
 
     menuOptions.entries_option.transform = [](ui::EntryState state) {
@@ -40,7 +42,9 @@ ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vec
     menu |= ui::CatchEvent([&](ui::Event event) {
         if(event == ui::Event().Return){
             std::string execCommand = visibleApplications[selectedEntry]->getExecCommand();
-            std::system(execCommand.c_str());
+            std::system((execCommand+"&").c_str());
+            std::cout << "Exec: " << execCommand << std::endl;
+            screen.Exit();
             return true;
         }
         return false;
