@@ -69,6 +69,11 @@ std::vector<bfs::path> getDesktopFiles(std::string dataDirsRaw){
     return desktopFilePaths;
 }
 
+struct UIParts {
+    ftxui::ScreenInteractive screen;
+};
+
+
 int main(){
     ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::TerminalOutput();
 
@@ -92,24 +97,28 @@ int main(){
     });
 
 
-    std::vector<std::string> menuEntries;
-    std::vector<std::shared_ptr<launcher::Application>> visibleApplications;
+    launcher::MenuData menuData;
     for(int i=0; i<10; i++){
-        menuEntries.push_back(applications[i]->getDisplayName());
-        visibleApplications.push_back(applications[i]);
+        menuData.menuEntries.push_back(applications[i]->getDisplayName());
+        menuData.visibleApplications.push_back(applications[i]);
     }
-    input->setupSearchEvent(applications, visibleApplications, menuEntries);
+    input->setupSearchEvent(applications, menuData.visibleApplications, menuData.menuEntries);
 
 
     // create menu
-    int selectedEntry = 0;
-    ui::Component menu = launcher::makeMenu(menuEntries, visibleApplications, selectedEntry, input, screen);
+    ui::Component menu = launcher::makeMenu(menuData, input, screen);
 
 
-    ui::Component mainLayout = ui::Container::Vertical({
+    std::vector components = {
         input->getComponent(),
         menu,
-    });
+    };
+    ui::Component mainLayout = ui::Container::Vertical(components);
+
+    ui::Component execComponent = ui::Renderer([] {return ui::text("Exec");});
+    components.push_back(execComponent);
+
+    mainLayout = ui::Container::Vertical(components);
 
     // auto renderer = ui::Renderer(mainLayout, [&] {
     //     return ui::vbox({

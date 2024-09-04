@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include <ftxui/component/screen_interactive.hpp>
 
-ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vector<std::shared_ptr<launcher::Application>>& visibleApplications, int& selectedEntry, std::shared_ptr<SearchBar>& input, ftxui::ScreenInteractive& screen){
+
+ui::Component launcher::makeMenu(MenuData& menuData, std::shared_ptr<SearchBar>& input, ftxui::ScreenInteractive& screen){
     ui::MenuOption menuOptions = ui::MenuOption::Vertical();
 
     menuOptions.entries_option.transform = [](ui::EntryState state) {
@@ -31,7 +32,7 @@ ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vec
         return menuStyle;
     };
 
-    auto menu = ui::Menu(&menuEntries, &selectedEntry, menuOptions);
+    auto menu = ui::Menu(&menuData.menuEntries, &menuData.selectedEntry, menuOptions);
     menu |= ui::CatchEvent([&](ui::Event event){
         if(event.is_character() || event == ui::Event::Backspace){
             input->getComponent()->OnEvent(event);
@@ -41,7 +42,7 @@ ui::Component launcher::makeMenu(std::vector<std::string>& menuEntries, std::vec
     });
     menu |= ui::CatchEvent([&](ui::Event event) {
         if(event == ui::Event().Return){
-            std::string execCommand = visibleApplications[selectedEntry]->getExecCommand();
+            std::string execCommand = menuData.visibleApplications[menuData.selectedEntry]->getExecCommand();
             std::system((execCommand+"&").c_str());
             std::cout << "Exec: " << execCommand << std::endl;
             screen.Exit();
