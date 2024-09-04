@@ -77,6 +77,9 @@ struct UIParts {
 int main(){
     ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::TerminalOutput();
 
+    // create components
+    std::vector<ui::Component> components;
+
     std::shared_ptr<SearchBar> input = std::make_shared<SearchBar>();
 
     // check XDG_DATA_DIRS env var is set
@@ -108,25 +111,40 @@ int main(){
     // create menu
     ui::Component menu = launcher::makeMenu(menuData, input, screen);
 
+    ui::Component mainLayout;
+    std::string execCommand;
+    // on exec command
+    menu |= ui::CatchEvent([&](ui::Event event){
+        if(event == ui::Event().Return){
+            execCommand = menuData.visibleApplications[menuData.selectedEntry]->getExecCommand();
+            int execStatus = std::system((execCommand+"&").c_str());
 
-    std::vector components = {
+            mainLayout->DetachAllChildren();
+            ui::Component message;
+            if(execStatus == 0){ // if command successfully executed
+                message = ui::Renderer( [&] {
+                    return ui::text("Running command: " + execCommand);
+                });
+            }
+            else {
+                message = ui::Renderer( [&] {
+                    return ui::text("Failed to run command: " + execCommand);
+                });
+            }
+            mainLayout->Add(message | ui::borderRounded);
+            screen.Exit();
+
+            return true;
+        }
+        return false;
+    });
+
+
+    components = {
         input->getComponent(),
         menu,
     };
-    ui::Component mainLayout = ui::Container::Vertical(components);
-
-    ui::Component execComponent = ui::Renderer([] {return ui::text("Exec");});
-    components.push_back(execComponent);
-
     mainLayout = ui::Container::Vertical(components);
-
-    // auto renderer = ui::Renderer(mainLayout, [&] {
-    //     return ui::vbox({
-    //         input->Render(),
-    //         ui::text("input string: \"" + inputStr + "\""),
-    //     }) | ui::borderRounded;
-    // });
-
 
     menu->TakeFocus();
     screen.Loop(mainLayout);

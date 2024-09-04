@@ -34,18 +34,9 @@ ui::Component launcher::makeMenu(MenuData& menuData, std::shared_ptr<SearchBar>&
 
     auto menu = ui::Menu(&menuData.menuEntries, &menuData.selectedEntry, menuOptions);
     menu |= ui::CatchEvent([&](ui::Event event){
+        // pass characters to input bar
         if(event.is_character() || event == ui::Event::Backspace){
             input->getComponent()->OnEvent(event);
-            return true;
-        }
-        else return false;
-    });
-    menu |= ui::CatchEvent([&](ui::Event event) {
-        if(event == ui::Event().Return){
-            std::string execCommand = menuData.visibleApplications[menuData.selectedEntry]->getExecCommand();
-            std::system((execCommand+"&").c_str());
-            std::cout << "Exec: " << execCommand << std::endl;
-            screen.Exit();
             return true;
         }
         return false;
